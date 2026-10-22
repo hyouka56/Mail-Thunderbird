@@ -25,8 +25,6 @@ import androidx.compose.ui.res.stringResource
 import app.k9mail.feature.account.common.ui.AppTitleTopHeader
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
-import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
-import app.k9mail.feature.account.oauth.ui.AccountOAuthView
 import app.k9mail.feature.account.oauth.ui.view.SignInWithGoogleButton
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
@@ -58,7 +56,7 @@ internal fun AccountAutoDiscoveryContent(
     onGoogleAccountClick: () -> Unit,
     onThundermailClick: () -> Unit,
     onScanQrCodeClick: () -> Unit,
-    oAuthViewModel: AccountOAuthContract.ViewModel,
+    oAuthContent: @Composable (isEnabled: Boolean) -> Unit,
     brandName: String,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -101,12 +99,7 @@ internal fun AccountAutoDiscoveryContent(
                     val isConfigurationApproved = state.configurationApproved.value ?: false
                     val isOAuthEnabled = isAutoDiscoverySettingsTrusted || isConfigurationApproved
                     Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
-                    AccountOAuthView(
-                        onOAuthResult = { result -> onEvent(Event.OnOAuthResult(result)) },
-                        viewModel = oAuthViewModel,
-                        isEnabled = isOAuthEnabled,
-                        autoStartSignIn = state.isGoogleAccountPicked && isOAuthEnabled,
-                    )
+                    oAuthContent(isOAuthEnabled)
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }

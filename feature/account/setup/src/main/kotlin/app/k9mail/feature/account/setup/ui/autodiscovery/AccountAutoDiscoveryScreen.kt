@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.AutoDiscoveryUiResult
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Effect
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
+import app.k9mail.feature.account.oauth.ui.AccountOAuthView
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.ViewModel
 import net.thunderbird.components.ui.bolt.template.Scaffold
 import net.thunderbird.core.common.provider.BrandNameProvider
@@ -57,7 +58,14 @@ internal fun AccountAutoDiscoveryScreen(
             },
             onThundermailClick = onThundermailClick,
             onScanQrCodeClick = onScanQrCodeClick,
-            oAuthViewModel = viewModel.oAuthViewModel,
+            oAuthContent = { isEnabled ->
+                AccountOAuthView(
+                    onOAuthResult = { result -> dispatch(Event.OnOAuthResult(result)) },
+                    viewModel = viewModel.oAuthViewModel,
+                    isEnabled = isEnabled,
+                    autoStartSignIn = state.value.isGoogleAccountPicked && isEnabled,
+                )
+            },
             brandName = brandNameProvider.brandName,
             contentPadding = innerPadding,
         )
