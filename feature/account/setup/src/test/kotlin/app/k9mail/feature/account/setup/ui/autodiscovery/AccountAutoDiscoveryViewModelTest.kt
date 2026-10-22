@@ -92,6 +92,54 @@ class AccountAutoDiscoveryViewModelTest {
     }
 
     @Test
+    fun selectedGoogleAccountStartsDiscovery() = runMviTest {
+        val emailAddress = "selected@gmail.com"
+        val initialState = State()
+        val testSubject = AccountAutoDiscoveryViewModel(
+            validator = FakeAccountAutoDiscoveryValidator(),
+            getAutoDiscovery = {
+                delay(50)
+                AutoDiscoveryResult.NoUsableSettingsFound
+            },
+            oAuthViewModel = FakeAccountOAuthViewModel(),
+            accountStateRepository = InMemoryAccountStateRepository(),
+            initialState = initialState,
+        )
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.GoogleAccountPicked(emailAddress))
+
+        val selectedState = State(
+            emailAddress = StringInputField(value = emailAddress),
+            isGoogleAccountPicked = true,
+        )
+        assertThat(turbines.stateTurbine.awaitItem()).isEqualTo(selectedState)
+
+        val validatedState = selectedState.copy(
+            emailAddress = StringInputField(
+                value = emailAddress,
+                error = null,
+                isValid = true,
+            ),
+        )
+        assertThat(turbines.stateTurbine.awaitItem()).isEqualTo(validatedState)
+
+        val loadingState = validatedState.copy(isLoading = true)
+        assertThat(turbines.stateTurbine.awaitItem()).isEqualTo(loadingState)
+
+        val manualSetupState = validatedState.copy(
+            configStep = ConfigStep.MANUAL_SETUP,
+            isLoading = false,
+        )
+        assertThatAndMviTurbinesConsumed(
+            actual = turbines.stateTurbine.awaitItem(),
+            turbines = turbines,
+        ) {
+            isEqualTo(manualSetupState)
+        }
+    }
+
+    @Test
     fun `should change state to password when OnNextClicked event is received, input valid and discovery loaded`() =
         runMviTest {
             val autoDiscoverySettings = AutoDiscoverySettingsFixture.settings
