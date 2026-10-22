@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import app.k9mail.feature.account.common.ui.AppTitleTopHeader
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
@@ -95,8 +95,7 @@ internal fun AccountAutoDiscoveryContent(
                 onNextClick = { onEvent(Event.OnNextClicked) },
                 onBackClick = { onEvent(Event.OnBackClicked) },
                 state = WizardNavigationBarState(
-                    showNext = state.isNextButtonVisible &&
-                        (state.emailAddress.value.isNotBlank() || showOtherEmailSetup),
+                    showNext = state.isNextButtonVisible && state.emailAddress.value.isNotBlank(),
                 ),
             )
         }
