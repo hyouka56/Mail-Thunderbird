@@ -3,6 +3,7 @@ package app.k9mail.feature.account.oauth.ui
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import app.k9mail.feature.account.oauth.domain.entity.OAuthResult
 import app.k9mail.feature.account.oauth.ui.AccountOAuthContract.Effect
@@ -16,6 +17,7 @@ fun AccountOAuthView(
     viewModel: ViewModel,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    autoStartSignIn: Boolean = false,
 ) {
     val oAuthLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -28,6 +30,12 @@ fun AccountOAuthView(
             is Effect.NavigateNext -> onOAuthResult(OAuthResult.Success(effect.state))
             is Effect.NavigateBack -> onOAuthResult(OAuthResult.Failure)
             is Effect.LaunchOAuth -> oAuthLauncher.launch(effect.intent)
+        }
+    }
+
+    LaunchedEffect(autoStartSignIn) {
+        if (autoStartSignIn) {
+            dispatch(Event.SignInClicked)
         }
     }
 

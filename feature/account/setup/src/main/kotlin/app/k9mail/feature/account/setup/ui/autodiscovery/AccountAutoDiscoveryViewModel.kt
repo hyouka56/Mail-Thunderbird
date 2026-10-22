@@ -42,6 +42,18 @@ internal class AccountAutoDiscoveryViewModel(
         when (event) {
             is Event.EmailAddressChanged -> changeEmailAddress(event.emailAddress)
 
+            is Event.GoogleAccountPicked -> {
+                accountStateRepository.clear()
+                updateState {
+                    State(
+                        emailAddress = StringInputField(value = event.emailAddress),
+                        isNextButtonVisible = true,
+                        isGoogleAccountPicked = true,
+                    )
+                }
+                submitEmail()
+            }
+
             is Event.PasswordChanged -> changePassword(event.password)
 
             is Event.ResultApprovalChanged -> changeConfigurationApproval(event.confirmed)

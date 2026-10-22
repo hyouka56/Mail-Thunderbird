@@ -38,8 +38,7 @@ internal fun AccountAutoDiscoveryScreen(
     ) { result ->
         val emailAddress = result.data?.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
         if (result.resultCode == Activity.RESULT_OK && !emailAddress.isNullOrBlank()) {
-            dispatch(Event.EmailAddressChanged(emailAddress))
-            dispatch(Event.OnNextClicked)
+            dispatch(Event.GoogleAccountPicked(emailAddress))
         }
     }
 
