@@ -234,7 +234,8 @@ internal fun ContentView(
                 onOAuthResult = { result -> onEvent(Event.OnOAuthResult(result)) },
                 viewModel = oAuthViewModel,
                 isEnabled = isAutoDiscoverySettingsTrusted || isConfigurationApproved,
-                autoStartSignIn = state.isGoogleAccountPicked,
+                autoStartSignIn = state.isGoogleAccountPicked &&
+                    (isAutoDiscoverySettingsTrusted || isConfigurationApproved),
             )
         }
     }
