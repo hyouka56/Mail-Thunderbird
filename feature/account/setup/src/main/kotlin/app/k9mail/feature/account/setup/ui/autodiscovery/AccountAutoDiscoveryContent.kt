@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import net.thunderbird.components.ui.bolt.atom.button.ButtonText
 import app.k9mail.feature.account.common.ui.AppTitleTopHeader
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
@@ -247,14 +246,13 @@ private fun GoogleFirstAccountContent(
                 .fillMaxWidth()
                 .testTag("account_setup_sign_in_with_google"),
         )
-        TextButton(
+        ButtonText(
+            text = stringResource(R.string.account_setup_other_email_provider_button),
             onClick = actions.onShowOtherEmailSetup,
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag("account_setup_other_email_provider"),
-        ) {
-            Text(text = stringResource(R.string.account_setup_other_email_provider_button))
-        }
+        )
     } else {
         AnimatedVisibility(state.emailAddress.value.isBlank()) {
             ThundermailButtonPanel(
