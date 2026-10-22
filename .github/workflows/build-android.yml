@@ -50,12 +50,6 @@ jobs:
         with:
           write-cache: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Prime configuration and dependency cache
-        run: ./gradlew --no-daemon help
-        # Warm-up only: the actual assemble task resolves everything required for the build.
-        timeout-minutes: 10
-        continue-on-error: true
-
       - name: Assemble common
         run: ./gradlew :app-common:assemble
 
