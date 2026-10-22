@@ -208,13 +208,17 @@ internal fun ContentView(
                 )
             }
 
-            EmailAddressInput(
-                emailAddress = state.emailAddress.value,
-                errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
-                onEmailAddressChange = { onEvent(Event.EmailAddressChanged(it)) },
-                contentPadding = PaddingValues(),
-                modifier = Modifier.testTag("account_setup_email_address_input"),
-            )
+            if (!state.isGoogleAccountPicked ||
+                state.configStep != AccountAutoDiscoveryContract.ConfigStep.OAUTH
+            ) {
+                EmailAddressInput(
+                    emailAddress = state.emailAddress.value,
+                    errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
+                    onEmailAddressChange = { onEvent(Event.EmailAddressChanged(it)) },
+                    contentPadding = PaddingValues(),
+                    modifier = Modifier.testTag("account_setup_email_address_input"),
+                )
+            }
         }
 
         if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.PASSWORD) {
