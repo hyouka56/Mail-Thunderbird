@@ -115,7 +115,7 @@ class AccountCreatorTest {
         assertThat(result.displayCount).isEqualTo(50)
         assertThat(result.isNotifyNewMail).isFalse()
         assertThat(result.accountNumber).isEqualTo(UNASSIGNED_ACCOUNT_NUMBER)
-        assertThat(result.deletePolicy).isEqualTo(DeletePolicy.NEVER)
+        assertThat(result.deletePolicy).isEqualTo(DeletePolicy.ON_DELETE)
         assertThat(result.isFinishedSetup).isFalse()
     }
 
