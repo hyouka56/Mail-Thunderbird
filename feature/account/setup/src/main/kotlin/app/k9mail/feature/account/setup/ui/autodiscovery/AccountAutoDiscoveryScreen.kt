@@ -70,7 +70,7 @@ private fun createGoogleAccountPickerIntent(): Intent = AccountManager.newChoose
     null,
     null,
     arrayOf("com.google"),
-    null,
+    true,
     null,
     null,
     null,
