@@ -95,15 +95,19 @@ internal fun AccountAutoDiscoveryContent(
                     onScanQrCodeClick = onScanQrCodeClick,
                     showOtherEmailSetup = showOtherEmailSetup,
                     onShowOtherEmailSetup = { showOtherEmailSetup = true },
-                    oAuthContent = { isEnabled ->
-                        AccountOAuthView(
-                            onOAuthResult = { result -> onEvent(Event.OnOAuthResult(result)) },
-                            viewModel = oAuthViewModel,
-                            isEnabled = isEnabled,
-                            autoStartSignIn = state.isGoogleAccountPicked && isEnabled,
-                        )
-                    },
                 )
+                if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.OAUTH) {
+                    val isAutoDiscoverySettingsTrusted = state.autoDiscoverySettings?.isTrusted ?: false
+                    val isConfigurationApproved = state.configurationApproved.value ?: false
+                    val isOAuthEnabled = isAutoDiscoverySettingsTrusted || isConfigurationApproved
+                    Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
+                    AccountOAuthView(
+                        onOAuthResult = { result -> onEvent(Event.OnOAuthResult(result)) },
+                        viewModel = oAuthViewModel,
+                        isEnabled = isOAuthEnabled,
+                        autoStartSignIn = state.isGoogleAccountPicked && isOAuthEnabled,
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
 
@@ -128,7 +132,6 @@ internal fun AutoDiscoveryContent(
     onScanQrCodeClick: () -> Unit,
     showOtherEmailSetup: Boolean,
     onShowOtherEmailSetup: () -> Unit,
-    oAuthContent: @Composable (isEnabled: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val resources = LocalResources.current
@@ -158,7 +161,6 @@ internal fun AutoDiscoveryContent(
                 onScanQrCodeClick = onScanQrCodeClick,
                 showOtherEmailSetup = showOtherEmailSetup,
                 onShowOtherEmailSetup = onShowOtherEmailSetup,
-                oAuthContent = oAuthContent,
                 resources = resources,
             )
         },
@@ -177,7 +179,6 @@ internal fun ContentView(
     onScanQrCodeClick: () -> Unit,
     showOtherEmailSetup: Boolean,
     onShowOtherEmailSetup: () -> Unit,
-    oAuthContent: @Composable (isEnabled: Boolean) -> Unit,
     resources: Resources,
     modifier: Modifier = Modifier,
 ) {
@@ -223,11 +224,6 @@ internal fun ContentView(
                 contentPadding = PaddingValues(),
                 modifier = Modifier.testTag("account_setup_password_input"),
             )
-        } else if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.OAUTH) {
-            val isAutoDiscoverySettingsTrusted = state.autoDiscoverySettings?.isTrusted ?: false
-            val isConfigurationApproved = state.configurationApproved.value ?: false
-            Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
-            oAuthContent(isAutoDiscoverySettingsTrusted || isConfigurationApproved)
         }
     }
 }
@@ -240,19 +236,21 @@ private fun GoogleFirstAccountContent(
     actions: AccountSetupActions,
 ) {
     if (state.emailAddress.value.isBlank() && !showOtherEmailSetup) {
-        SignInWithGoogleButton(
-            onClick = actions.onGoogleAccountClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_setup_sign_in_with_google"),
-        )
-        ButtonText(
-            text = stringResource(R.string.account_setup_other_email_provider_button),
-            onClick = actions.onShowOtherEmailSetup,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("account_setup_other_email_provider"),
-        )
+        Column {
+            SignInWithGoogleButton(
+                onClick = actions.onGoogleAccountClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_setup_sign_in_with_google"),
+            )
+            ButtonText(
+                text = stringResource(R.string.account_setup_other_email_provider_button),
+                onClick = actions.onShowOtherEmailSetup,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_setup_other_email_provider"),
+            )
+        }
     } else {
         AnimatedVisibility(state.emailAddress.value.isBlank()) {
             ThundermailButtonPanel(
