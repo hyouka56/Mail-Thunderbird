@@ -1,0 +1,43 @@
+---
+name: Build - Minimal Mail APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - custom/minimal-mail-20261022
+
+permissions:
+  contents: read
+
+concurrency:
+  group: minimal-mail-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mail:
+    name: Build and upload Mail APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+        with:
+          write-cache: 'false'
+
+      - name: Build the FOSS Mail release APK
+        run: ./gradlew :app-k9mail:assembleFossRelease -Pci=true --no-daemon --console=plain --stacktrace
+
+      - name: Upload Mail APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mail-foss-release-apk
+          path: app-k9mail/build/outputs/apk/foss/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
