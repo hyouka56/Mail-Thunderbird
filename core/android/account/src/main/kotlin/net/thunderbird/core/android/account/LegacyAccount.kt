@@ -28,7 +28,7 @@ data class LegacyAccount(
     val profile: ProfileDto,
 
     // Uncategorized
-    val deletePolicy: DeletePolicy = DeletePolicy.NEVER,
+    val deletePolicy: DeletePolicy = DeletePolicy.ON_DELETE,
     val incomingServerSettings: ServerSettings,
     val outgoingServerSettings: ServerSettings,
     val oAuthState: String? = null,
@@ -92,7 +92,7 @@ data class LegacyAccount(
     val isDefaultQuotedTextShown: Boolean = false,
     val isReplyAfterQuote: Boolean = false,
     val isStripSignature: Boolean = false,
-    val isSyncRemoteDeletions: Boolean = false,
+    val isSyncRemoteDeletions: Boolean = true,
     val openPgpProvider: String? = null,
     val openPgpKey: Long = 0,
     val autocryptPreferEncryptMutual: Boolean = false,
