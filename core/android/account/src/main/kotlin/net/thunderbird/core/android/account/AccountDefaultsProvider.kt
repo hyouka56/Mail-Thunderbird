@@ -48,7 +48,7 @@ interface AccountDefaultsProvider {
          * on each new folder and can be incremented with "Load more messages..." by the
          * VISIBLE_LIMIT_INCREMENT
          */
-        const val DEFAULT_VISIBLE_LIMIT = Int.MAX_VALUE
+        const val DEFAULT_VISIBLE_LIMIT = 0
 
         const val NO_OPENPGP_KEY: Long = 0
 
