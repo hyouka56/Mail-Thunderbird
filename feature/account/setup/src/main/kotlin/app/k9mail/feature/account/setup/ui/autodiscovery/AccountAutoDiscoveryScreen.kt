@@ -64,7 +64,6 @@ internal fun AccountAutoDiscoveryScreen(
     }
 }
 
-
 @Suppress("DEPRECATION")
 private fun createGoogleAccountPickerIntent(): Intent = AccountManager.newChooseAccountIntent(
     null,
