@@ -70,7 +70,7 @@ launchable-activity: name='net.thunderbird.app.common.MainActivity'  label='' ic
 locales: '--_--' 'ar' 'be' 'bg' 'br' 'ca' 'co' 'cs' 'cy' 'da' 'de' 'el' 'en' 'en-GB' 'eo' 'es' 'et' 'eu' 'fa' 'fi' 'fr' 'fy' 'ga' 'gd' 'gl' 'hr' 'hu' 'in' 'is' 'it' 'iw' 'ja' 'ko' 'lt' 'lv' 'nb' 'nl' 'nn' 'pl' 'pt' 'pt-BR' 'pt-PT' 'ro' 'ru' 'sk' 'sl' 'sq' 'sr' 'sv' 'ta' 'ta-IN' 'tr' 'uk' 'vi' 'zh' 'zh-CN' 'zh-TW'
 main
 minSdkVersion:'24'
-native-code: 'arm64-v8a' 'armeabi-v7a' 'x86' 'x86_64'
+native-code: 'arm64-v8a'
 other-activities
 other-receivers
 other-services
