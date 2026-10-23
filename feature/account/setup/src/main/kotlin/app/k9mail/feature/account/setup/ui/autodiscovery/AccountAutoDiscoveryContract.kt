@@ -39,10 +39,12 @@ interface AccountAutoDiscoveryContract {
         override val isLoading: Boolean = false,
 
         val isNextButtonVisible: Boolean = true,
+        val isGoogleAccountPicked: Boolean = false,
     ) : LoadingErrorState<Error>
 
     sealed interface Event {
         data class EmailAddressChanged(val emailAddress: String) : Event
+        data class GoogleAccountPicked(val emailAddress: String) : Event
         data class PasswordChanged(val password: String) : Event
         data class ResultApprovalChanged(val confirmed: Boolean) : Event
         data class OnOAuthResult(val result: OAuthResult) : Event

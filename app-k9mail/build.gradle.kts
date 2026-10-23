@@ -17,11 +17,15 @@ android {
         applicationId = "com.fsck.k9"
         testApplicationId = "com.fsck.k9.tests"
 
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
+
         versionCode = 39004
         versionName = "26.0"
         versionNameSuffix = "a1"
 
-        buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"K-9 Mail\"")
+        buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"Mail\"")
     }
 
     androidResources {

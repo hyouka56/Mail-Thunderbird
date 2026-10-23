@@ -91,7 +91,7 @@ class AccountSettingsDescriptions {
                 new V(1, new BooleanSetting(DEFAULT_QUOTED_TEXT_SHOWN))
         ));
         s.put("deletePolicy", Settings.versions(
-                new V(1, new DeletePolicySetting(DeletePolicy.NEVER))
+                new V(1, new DeletePolicySetting(DeletePolicy.ON_DELETE))
         ));
         s.put("displayCount", Settings.versions(
                 new V(1, new IntegerResourceSetting(DEFAULT_VISIBLE_LIMIT,

@@ -1,0 +1,58 @@
+---
+name: Build - Minimal Mail APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - custom/minimal-mail-20261022
+
+permissions:
+  contents: read
+
+concurrency:
+  group: minimal-mail-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mail:
+    name: Build and upload Mail APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+        with:
+          write-cache: 'false'
+
+      - name: Build signed ARM64-only FOSS Mail APK
+        run: ./gradlew :app-k9mail:assembleFossDebug -Pci=true --no-daemon --console=plain --stacktrace
+
+      - name: Verify APK signature and ARM64-only packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="app-k9mail/build/outputs/apk/foss/debug/app-k9mail-foss-debug.apk"
+          test -s "$apk"
+          apksigner="$(find "$ANDROID_HOME/build-tools" -mindepth 2 -maxdepth 2 -name apksigner -type f | sort -V | tail -n 1)"
+          test -n "$apksigner"
+          "$apksigner" verify --verbose "$apk"
+          unzip -Z1 "$apk" | awk -F/ '$1 == "lib" && NF > 2 { print $2 }' | sort -u > "$RUNNER_TEMP/apk-abis.txt"
+          echo "Packaged ABIs:"
+          cat "$RUNNER_TEMP/apk-abis.txt"
+          grep -qx 'arm64-v8a' "$RUNNER_TEMP/apk-abis.txt"
+          test "$(wc -l < "$RUNNER_TEMP/apk-abis.txt" | tr -d ' ')" = "1"
+
+      - name: Upload installable Mail APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2 (Node.js 24)
+        with:
+          path: app-k9mail/build/outputs/apk/foss/debug/app-k9mail-foss-debug.apk
+          archive: false
+          if-no-files-found: error
+          retention-days: 14

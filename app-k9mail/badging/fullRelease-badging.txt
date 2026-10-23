@@ -17,7 +17,7 @@ application-label-da:'K-9 Mail'
 application-label-de:'K-9 Mail'
 application-label-el:'K-9 Mail'
 application-label-en-GB:'K-9 Mail'
-application-label-en:'K-9 Mail'
+application-label-en:'Mail'
 application-label-eo:'K-9 Retpoŝtilo'
 application-label-es:'K-9 Mail'
 application-label-et:'K-9 Mail'
@@ -61,8 +61,8 @@ application-label-vi:'Thư K-9'
 application-label-zh-CN:'K-9 Mail'
 application-label-zh-TW:'K-9 Mail'
 application-label-zh:'K-9 Mail'
-application-label:'K-9 Mail'
-application: label='K-9 Mail' icon='res/drawable-v26/ic_launcher.xml'
+application-label:'Mail'
+application: label='Mail' icon='res/drawable-v26/ic_launcher.xml'
 densities: '120' '160' '240' '320' '480' '640' '65534'
 feature-group: label=''
 install-location:'auto'
@@ -70,7 +70,7 @@ launchable-activity: name='net.thunderbird.app.common.MainActivity'  label='' ic
 locales: '--_--' 'ar' 'be' 'bg' 'br' 'ca' 'co' 'cs' 'cy' 'da' 'de' 'el' 'en' 'en-GB' 'eo' 'es' 'et' 'eu' 'fa' 'fi' 'fr' 'fy' 'ga' 'gd' 'gl' 'hr' 'hu' 'in' 'is' 'it' 'iw' 'ja' 'ko' 'lt' 'lv' 'nb' 'nl' 'nn' 'pl' 'pt' 'pt-BR' 'pt-PT' 'ro' 'ru' 'sk' 'sl' 'sq' 'sr' 'sv' 'ta' 'ta-IN' 'tr' 'uk' 'vi' 'zh' 'zh-CN' 'zh-TW'
 main
 minSdkVersion:'24'
-native-code: 'arm64-v8a' 'armeabi-v7a' 'x86' 'x86_64'
+native-code: 'arm64-v8a'
 other-activities
 other-receivers
 other-services

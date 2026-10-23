@@ -56,57 +56,57 @@
     <color name="lightOnTertiaryFixedVariant">#4B3F6F</color>
 
     <!-- Dark Theme -->
-    <color name="darkPrimary">#F1E7FF</color>
-    <color name="darkOnPrimary">#37265D</color>
-    <color name="darkPrimaryContainer">#CBB7F9</color>
-    <color name="darkOnPrimaryContainer">#39285F</color>
+    <color name="darkPrimary">#FFFFFF</color>
+    <color name="darkOnPrimary">#000000</color>
+    <color name="darkPrimaryContainer">#FFFFFF</color>
+    <color name="darkOnPrimaryContainer">#000000</color>
 
-    <color name="darkSecondary">#F1E7FF</color>
-    <color name="darkOnSecondary">#332D41</color>
-    <color name="darkSecondaryContainer">#C7BDD7</color>
-    <color name="darkOnSecondaryContainer">#352F43</color>
+    <color name="darkSecondary">#FFFFFF</color>
+    <color name="darkOnSecondary">#000000</color>
+    <color name="darkSecondaryContainer">#FFFFFF</color>
+    <color name="darkOnSecondaryContainer">#000000</color>
 
-    <color name="darkTertiary">#FFDBE5</color>
-    <color name="darkOnTertiary">#472732</color>
-    <color name="darkTertiaryContainer">#DDAEBC</color>
-    <color name="darkOnTertiaryContainer">#43242F</color>
+    <color name="darkTertiary">#FFFFFF</color>
+    <color name="darkOnTertiary">#000000</color>
+    <color name="darkTertiaryContainer">#FFFFFF</color>
+    <color name="darkOnTertiaryContainer">#000000</color>
 
     <color name="darkError">#FFB3AD</color>
     <color name="darkOnError">#68000A</color>
     <color name="darkErrorContainer">#DA3437</color>
     <color name="darkOnErrorContainer">#FFFFFF</color>
 
-    <color name="darkSurfaceDim">#131314</color>
-    <color name="darkSurface">#131314</color>
-    <color name="darkSurfaceBright">#39393A</color>
-    <color name="darkOnSurface">#E5E2E3</color>
-    <color name="darkOnSurfaceVariant">#C5C6CC</color>
+    <color name="darkSurfaceDim">#000000</color>
+    <color name="darkSurface">#000000</color>
+    <color name="darkSurfaceBright">#000000</color>
+    <color name="darkOnSurface">#FFFFFF</color>
+    <color name="darkOnSurfaceVariant">#FFFFFF</color>
 
-    <color name="darkSurfaceContainerLowest">#0E0E0F</color>
-    <color name="darkSurfaceContainerLow">#1B1B1C</color>
-    <color name="darkSurfaceContainer">#201F20</color>
-    <color name="darkSurfaceContainerHigh">#2A2A2B</color>
-    <color name="darkSurfaceContainerHighest">#353436</color>
+    <color name="darkSurfaceContainerLowest">#000000</color>
+    <color name="darkSurfaceContainerLow">#000000</color>
+    <color name="darkSurfaceContainer">#000000</color>
+    <color name="darkSurfaceContainerHigh">#000000</color>
+    <color name="darkSurfaceContainerHighest">#000000</color>
 
-    <color name="darkSurfaceInverse">#E5E2E3</color>
-    <color name="darkOnSurfaceInverse">#313031</color>
-    <color name="darkPrimaryInverse">#66558F</color>
+    <color name="darkSurfaceInverse">#FFFFFF</color>
+    <color name="darkOnSurfaceInverse">#000000</color>
+    <color name="darkPrimaryInverse">#000000</color>
 
-    <color name="darkOutline">#8F9096</color>
-    <color name="darkOutlineVariant">#44474C</color>
+    <color name="darkOutline">#FFFFFF</color>
+    <color name="darkOutlineVariant">#FFFFFF</color>
 
-    <color name="darkPrimaryFixed">#E9DDFF</color>
-    <color name="darkOnPrimaryFixed">#210F47</color>
-    <color name="darkPrimaryFixedDim">#D0BCFE</color>
-    <color name="darkOnPrimaryFixedVariant">#4E3D75</color>
+    <color name="darkPrimaryFixed">#FFFFFF</color>
+    <color name="darkOnPrimaryFixed">#000000</color>
+    <color name="darkPrimaryFixedDim">#FFFFFF</color>
+    <color name="darkOnPrimaryFixedVariant">#000000</color>
 
-    <color name="darkSecondaryFixed">#E9DEF9</color>
-    <color name="darkOnSecondaryFixed">#1E182B</color>
-    <color name="darkSecondaryFixedDim">#CCC2DC</color>
-    <color name="darkOnSecondaryFixedVariant">#4A4359</color>
+    <color name="darkSecondaryFixed">#FFFFFF</color>
+    <color name="darkOnSecondaryFixed">#000000</color>
+    <color name="darkSecondaryFixedDim">#FFFFFF</color>
+    <color name="darkOnSecondaryFixedVariant">#000000</color>
 
-    <color name="darkTertiaryFixed">#FFD9E3</color>
-    <color name="darkOnTertiaryFixed">#2F121D</color>
-    <color name="darkTertiaryFixedDim">#EABAC8</color>
-    <color name="darkOnTertiaryFixedVariant">#603D48</color>
+    <color name="darkTertiaryFixed">#FFFFFF</color>
+    <color name="darkOnTertiaryFixed">#000000</color>
+    <color name="darkTertiaryFixedDim">#FFFFFF</color>
+    <color name="darkOnTertiaryFixedVariant">#000000</color>
 </resources>

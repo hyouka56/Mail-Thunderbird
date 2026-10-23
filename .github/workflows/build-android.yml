@@ -41,14 +41,14 @@ jobs:
 
       - name: Cleanup disk
         uses: ./.github/actions/disk-cleanup
+        # Disk cleanup is best-effort; don't let deleting hosted tool caches block Gradle.
+        timeout-minutes: 5
+        continue-on-error: true
 
       - name: Setup Gradle environment
         uses: ./.github/actions/setup-gradle
         with:
           write-cache: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Prime configuration and dependency cache
-        run: ./gradlew --no-daemon help
 
       - name: Assemble common
         run: ./gradlew :app-common:assemble

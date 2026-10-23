@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -18,7 +17,6 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.compose.animation.AnimatedVisibility
@@ -110,8 +108,6 @@ import com.fsck.k9.ui.messagelist.MessageListFragmentBridgeContract.MessageListF
 import com.fsck.k9.ui.messagelist.debug.AuthDebugActions
 import com.fsck.k9.ui.messagelist.item.toMessageItemUi
 import com.fsck.k9.ui.messageview.LastSelectedFolderStore
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
@@ -173,8 +169,6 @@ import net.thunderbird.feature.search.legacy.serialization.LocalMessageSearchSer
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import app.k9mail.core.ui.legacy.designsystem.R as DesignSystemR
-import com.google.android.material.R as MaterialR
 import net.thunderbird.core.android.account.SortType as LegacySortType
 
 private const val TAG = "MessageListFragment"
@@ -1073,25 +1067,8 @@ class MessageListFragment :
     }
 
     private fun prepareSortMenu(menu: Menu) {
-        menu.findItem(R.id.select_sort_criteria).apply {
-            isVisible = true
-            actionView = MaterialButton(
-                requireContext(),
-                null,
-                MaterialR.attr.materialIconButtonStyle,
-            ).apply {
-                val color = MaterialColors.getColor(this, MaterialR.attr.colorOnSurface)
-                iconTint = ColorStateList.valueOf(color)
-                icon = AppCompatResources.getDrawable(context, DesignSystemR.drawable.ic_sort)
-                setOnClickListener {
-                    showComposeDropdown(
-                        anchor = it,
-                        lifecycleOwner = viewLifecycleOwner,
-                        stateOwner = this@MessageListFragment,
-                    )
-                }
-            }
-        }
+        // Keep the message-list toolbar minimal. Sorting remains available in app settings.
+        menu.findItem(R.id.select_sort_criteria).isVisible = false
     }
 
     private fun prepareDebugMenu(menu: Menu) {

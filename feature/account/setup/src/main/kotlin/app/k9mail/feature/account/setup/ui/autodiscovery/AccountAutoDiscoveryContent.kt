@@ -7,12 +7,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
@@ -20,13 +25,13 @@ import androidx.compose.ui.res.stringResource
 import app.k9mail.feature.account.common.ui.AppTitleTopHeader
 import app.k9mail.feature.account.common.ui.WizardNavigationBar
 import app.k9mail.feature.account.common.ui.WizardNavigationBarState
-import app.k9mail.feature.account.oauth.ui.AccountOAuthContract
-import app.k9mail.feature.account.oauth.ui.AccountOAuthView
+import app.k9mail.feature.account.oauth.ui.view.SignInWithGoogleButton
 import app.k9mail.feature.account.setup.R
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Event
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import app.k9mail.feature.account.setup.ui.autodiscovery.view.AutoDiscoveryResultApprovalView
 import app.k9mail.feature.account.setup.ui.autodiscovery.view.AutoDiscoveryResultView
+import net.thunderbird.components.ui.bolt.atom.button.ButtonText
 import net.thunderbird.components.ui.bolt.molecule.ContentLoadingErrorView
 import net.thunderbird.components.ui.bolt.molecule.ErrorView
 import net.thunderbird.components.ui.bolt.molecule.LoadingView
@@ -36,18 +41,28 @@ import net.thunderbird.components.ui.bolt.template.ResponsiveWidthContainer
 import net.thunderbird.components.ui.bolt.theme.BoltTheme
 import net.thunderbird.feature.thundermail.ui.component.ThundermailButtonPanel
 
+private data class AccountSetupActions(
+    val onEvent: (Event) -> Unit,
+    val onGoogleAccountClick: () -> Unit,
+    val onShowOtherEmailSetup: () -> Unit,
+    val onThundermailClick: () -> Unit,
+    val onScanQrCodeClick: () -> Unit,
+)
+
 @Composable
 internal fun AccountAutoDiscoveryContent(
     state: State,
     onEvent: (Event) -> Unit,
+    onGoogleAccountClick: () -> Unit,
     onThundermailClick: () -> Unit,
     onScanQrCodeClick: () -> Unit,
-    oAuthViewModel: AccountOAuthContract.ViewModel,
+    oAuthContent: @Composable (isEnabled: Boolean) -> Unit,
     brandName: String,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
+    var showOtherEmailSetup by remember { mutableStateOf(false) }
 
     ResponsiveWidthContainer(
         modifier = modifier
@@ -70,21 +85,32 @@ internal fun AccountAutoDiscoveryContent(
                     title = brandName,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                @Suppress("ViewModelForwarding")
                 AutoDiscoveryContent(
                     state = state,
                     onEvent = onEvent,
+                    onGoogleAccountClick = onGoogleAccountClick,
                     onThundermailClick = onThundermailClick,
                     onScanQrCodeClick = onScanQrCodeClick,
-                    oAuthViewModel = oAuthViewModel,
+                    showOtherEmailSetup = showOtherEmailSetup,
+                    onShowOtherEmailSetup = { showOtherEmailSetup = true },
                 )
+                if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.OAUTH) {
+                    val isAutoDiscoverySettingsTrusted = state.autoDiscoverySettings?.isTrusted ?: false
+                    val isConfigurationApproved = state.configurationApproved.value ?: false
+                    val isOAuthEnabled = isAutoDiscoverySettingsTrusted || isConfigurationApproved
+                    Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
+                    oAuthContent(isOAuthEnabled)
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
 
             WizardNavigationBar(
                 onNextClick = { onEvent(Event.OnNextClicked) },
                 onBackClick = { onEvent(Event.OnBackClicked) },
-                state = WizardNavigationBarState(showNext = state.isNextButtonVisible),
+                state = WizardNavigationBarState(
+                    showNext = state.isNextButtonVisible &&
+                        (state.emailAddress.value.isNotBlank() || showOtherEmailSetup),
+                ),
             )
         }
     }
@@ -94,9 +120,11 @@ internal fun AccountAutoDiscoveryContent(
 internal fun AutoDiscoveryContent(
     state: State,
     onEvent: (Event) -> Unit,
+    onGoogleAccountClick: () -> Unit,
     onThundermailClick: () -> Unit,
     onScanQrCodeClick: () -> Unit,
-    oAuthViewModel: AccountOAuthContract.ViewModel,
+    showOtherEmailSetup: Boolean,
+    onShowOtherEmailSetup: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val resources = LocalResources.current
@@ -118,13 +146,14 @@ internal fun AutoDiscoveryContent(
             )
         },
         content = { contentState ->
-            @Suppress("ViewModelForwarding")
             ContentView(
                 state = contentState,
                 onEvent = onEvent,
+                onGoogleAccountClick = onGoogleAccountClick,
                 onThundermailClick = onThundermailClick,
                 onScanQrCodeClick = onScanQrCodeClick,
-                oAuthViewModel = oAuthViewModel,
+                showOtherEmailSetup = showOtherEmailSetup,
+                onShowOtherEmailSetup = onShowOtherEmailSetup,
                 resources = resources,
             )
         },
@@ -138,9 +167,11 @@ internal fun AutoDiscoveryContent(
 internal fun ContentView(
     state: State,
     onEvent: (Event) -> Unit,
+    onGoogleAccountClick: () -> Unit,
     onThundermailClick: () -> Unit,
     onScanQrCodeClick: () -> Unit,
-    oAuthViewModel: AccountOAuthContract.ViewModel,
+    showOtherEmailSetup: Boolean,
+    onShowOtherEmailSetup: () -> Unit,
     resources: Resources,
     modifier: Modifier = Modifier,
 ) {
@@ -164,22 +195,17 @@ internal fun ContentView(
             Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
         }
 
-        AnimatedVisibility(state.emailAddress.value.isBlank()) {
-            ThundermailButtonPanel(
+        GoogleFirstAccountContent(
+            state = state,
+            showOtherEmailSetup = showOtherEmailSetup,
+            resources = resources,
+            actions = AccountSetupActions(
+                onEvent = onEvent,
+                onGoogleAccountClick = onGoogleAccountClick,
+                onShowOtherEmailSetup = onShowOtherEmailSetup,
                 onThundermailClick = onThundermailClick,
                 onScanQrCodeClick = onScanQrCodeClick,
-                modifier = Modifier
-                    .testTag("thundermail_panel")
-                    .padding(bottom = BoltTheme.spacings.quadruple),
-            )
-        }
-
-        EmailAddressInput(
-            emailAddress = state.emailAddress.value,
-            errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
-            onEmailAddressChange = { onEvent(Event.EmailAddressChanged(it)) },
-            contentPadding = PaddingValues(),
-            modifier = Modifier.testTag("account_setup_email_address_input"),
+            ),
         )
 
         if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.PASSWORD) {
@@ -191,14 +217,53 @@ internal fun ContentView(
                 contentPadding = PaddingValues(),
                 modifier = Modifier.testTag("account_setup_password_input"),
             )
-        } else if (state.configStep == AccountAutoDiscoveryContract.ConfigStep.OAUTH) {
-            val isAutoDiscoverySettingsTrusted = state.autoDiscoverySettings?.isTrusted ?: false
-            val isConfigurationApproved = state.configurationApproved.value ?: false
-            Spacer(modifier = Modifier.height(BoltTheme.spacings.double))
-            AccountOAuthView(
-                onOAuthResult = { result -> onEvent(Event.OnOAuthResult(result)) },
-                viewModel = oAuthViewModel,
-                isEnabled = isAutoDiscoverySettingsTrusted || isConfigurationApproved,
+        }
+    }
+}
+
+@Composable
+private fun GoogleFirstAccountContent(
+    state: State,
+    showOtherEmailSetup: Boolean,
+    resources: Resources,
+    actions: AccountSetupActions,
+) {
+    if (state.emailAddress.value.isBlank() && !showOtherEmailSetup) {
+        Column {
+            SignInWithGoogleButton(
+                onClick = actions.onGoogleAccountClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_setup_sign_in_with_google"),
+            )
+            ButtonText(
+                text = stringResource(R.string.account_setup_other_email_provider_button),
+                onClick = actions.onShowOtherEmailSetup,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("account_setup_other_email_provider"),
+            )
+        }
+    } else {
+        AnimatedVisibility(state.emailAddress.value.isBlank()) {
+            ThundermailButtonPanel(
+                onThundermailClick = actions.onThundermailClick,
+                onScanQrCodeClick = actions.onScanQrCodeClick,
+                modifier = Modifier
+                    .testTag("thundermail_panel")
+                    .padding(bottom = BoltTheme.spacings.quadruple),
+            )
+        }
+
+        if (!state.isGoogleAccountPicked ||
+            state.configStep != AccountAutoDiscoveryContract.ConfigStep.OAUTH
+        ) {
+            EmailAddressInput(
+                emailAddress = state.emailAddress.value,
+                errorMessage = state.emailAddress.error?.toAutoDiscoveryValidationErrorString(resources),
+                onEmailAddressChange = { actions.onEvent(Event.EmailAddressChanged(it)) },
+                contentPadding = PaddingValues(),
+                modifier = Modifier.testTag("account_setup_email_address_input"),
             )
         }
     }

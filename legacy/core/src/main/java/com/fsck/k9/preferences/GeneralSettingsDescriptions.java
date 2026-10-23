@@ -166,7 +166,7 @@ class GeneralSettingsDescriptions {
             new V(1, new LanguageSetting())
         ));
         s.put("messageListPreviewLines", Settings.versions(
-            new V(1, new IntegerRangeSetting(0, 6, 2))
+            new V(1, new IntegerRangeSetting(0, 6, 1))
         ));
         s.put("messageListStars", Settings.versions(
             new V(1, new BooleanSetting(DISPLAY_SETTINGS_DEFAULT_IS_SHOW_MESSAGE_LIST_STAR))
@@ -248,7 +248,7 @@ class GeneralSettingsDescriptions {
             new V(28, new BooleanSetting(DISPLAY_SETTINGS_DEFAULT_IS_AUTO_FIT_WIDTH))
         ));
         s.put("colorizeMissingContactPictures", Settings.versions(
-            new V(29, new BooleanSetting(true))
+            new V(29, new BooleanSetting(false))
         ));
         s.put("messageViewDeleteActionVisible", Settings.versions(
             new V(30, new BooleanSetting(true))
@@ -323,7 +323,7 @@ class GeneralSettingsDescriptions {
             new V(85, new BooleanSetting(DISPLAY_SETTINGS_DEFAULT_IS_SHOW_COMPOSE_BUTTON_ON_MESSAGE_LIST))
         ));
         s.put("messageListDensity", Settings.versions(
-            new V(86, new EnumSetting<>(UiDensity.class, UiDensity.Default))
+            new V(86, new EnumSetting<>(UiDensity.class, UiDensity.Compact))
         ));
         s.put("fontSizeMessageViewAccountName", Settings.versions(
             new V(87, new FontSizeSetting(FontSizes.FONT_DEFAULT))
